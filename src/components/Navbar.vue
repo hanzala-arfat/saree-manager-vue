@@ -1,8 +1,8 @@
 <template>
-    <div class="navbar">
-    <a class="navbar-brand" href="#">
-      <!-- <img src="./static/aperture.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
-      <span class="brand-name">Saree Manager</span>
+  <div class="navbar">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <i class="fab fa-sketch" style="font-size: 1.4rem"></i>
+      <span class="ml-2" style="font-size: 1.35rem">Saree Manager</span>
     </a>
     <!-- <ul class="navbar-links">
       <li class="navbar-link">
@@ -21,30 +21,30 @@
         <img src="./static/settings.svg" width="20" height="20" class="d-inline-block align-top" alt="">
         <span class="link-name">Settings</span>
       </li>
-    </ul> -->
+    </ul>-->
   </div>
 </template>
 
 
 <script>
 export default {
-    name: "Navbar"
-}
+  name: "Navbar"
+};
 </script>
 
 <style>
 .navbar {
   z-index: 10;
-  background-color: #343a40!important;
+  background-color: #343a40 !important;
   display: flex;
-    align-items: center;
+  align-items: center;
   color: white;
   width: 100%;
 }
 
 .navbar a {
   color: white;
-  text-decoration: white
+  text-decoration: white;
 }
 
 .navbar-links {
@@ -52,12 +52,11 @@ export default {
   margin: 0;
   padding-left: 0;
   display: flex;
-  text-align: center
+  text-align: center;
 }
 
 .navbar-link {
   display: inline;
   margin: 1px 12px;
 }
-
 </style>

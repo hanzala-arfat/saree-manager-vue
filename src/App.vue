@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <Navbar />
+    <Navbar/>
     <div class="row">
-      <Sidebar />
-      <router-view class="views col-md-10" />
+      <Sidebar/>
+      <router-view class="views col-md-10"/>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import Sidebar from "@/components/Sidebar.vue"
+import Sidebar from "@/components/Sidebar.vue";
 export default {
-  components:{
+  components: {
     Navbar,
     Sidebar
   }
-}
+};
 </script>
 
 
@@ -28,17 +28,22 @@ export default {
   color: #2c3e50;
 }
 
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
-.row{
+.row {
   margin: 0;
 }
 
-@media(max-width: 768px) {
-  .navbar{
+@media (max-width: 768px) {
+  .navbar {
     position: fixed;
     top: 0;
   }
-  .views{
+  .views {
     margin: 8vh auto;
   }
 }

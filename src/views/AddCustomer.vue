@@ -53,6 +53,7 @@ export default {
 h4{
     margin: 0;
     margin-left: 12px;
+    font-size: 1.4rem;
 }
 .btn{
     padding: 2px 6px;

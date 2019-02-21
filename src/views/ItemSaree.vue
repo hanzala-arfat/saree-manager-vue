@@ -3,7 +3,7 @@
     <div class="container">
       <div class="title-bar">
         <h2>Saree</h2>
-        <p>Ager khacchi saree ko aap purchase kiye hain aur usko apne stock me manage karne k liye click karen.</p>
+        <p>Kacchi saree ko apne stock me yahan se add karen.</p>
         <button
           type="button"
           class="btn btn-primary btn-sm"

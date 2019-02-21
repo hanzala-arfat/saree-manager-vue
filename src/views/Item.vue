@@ -15,8 +15,9 @@
             <p class="card-text">{{item.description}}</p>
           </div>
           <div class="card-footer bg-transparent">
-
-            <router-link :to="'/item/' + item.name.toLowerCase()" class="btn btn-dark btn-sm">Go ></router-link>
+            <router-link :to="'/item/' + item.name.toLowerCase()" class="btn btn-dark btn-sm">
+              <i class="fas fa-arrow-right"></i>
+            </router-link>
           </div>
         </div>
       </div>
@@ -60,6 +61,12 @@ export default {
 }
 .card-footer {
   border: none;
+}
+.card-body > p {
+  margin-bottom: 0.2rem;
+}
+.card-footer {
+  padding-top: 0.1rem;
 }
 </style>
 

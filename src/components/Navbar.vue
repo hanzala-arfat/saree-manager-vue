@@ -2,7 +2,7 @@
   <div class="navbar">
     <a class="navbar-brand d-flex align-items-center" href="#">
       <i class="fab fa-sketch" style="font-size: 1.4rem"></i>
-      <span class="ml-2" style="font-size: 1.35rem">Saree Manager</span>
+      <span class="ml-2" style="font-size: 1.2rem">Saree Manager</span>
     </a>
     <!-- <ul class="navbar-links">
       <li class="navbar-link">

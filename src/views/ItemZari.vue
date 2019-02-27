@@ -41,10 +41,10 @@
           </div>
           <div class="modal-body">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Enter Zari Colour.">
-              <input type="text" class="form-control" placeholder="Enter Weight.">
+              <input type="text" class="form-control" placeholder="Enter Zari Colour." v-model="newZari.name">
+              <input type="text" class="form-control" placeholder="Enter Weight."  v-model="newZari.weight">
               <div class="input-group-append">
-                <button class="btn btn-dark btn-sm" type="button">Add</button>
+                <button class="btn btn-dark btn-sm" type="button" @click.prevent="addNewZari" data-dismiss="modal">Add</button>
               </div>
             </div>
           </div>
@@ -61,8 +61,17 @@ export default {
   name: "ItemZari",
   data() {
     return {
-      zariList: [{ name: "Pista", weight: 6.75 }]
+      zariList: [
+        { name: "Pista", weight: 6.75 }
+      ],
+      newZari: { name: '', weight: ''}
     };
+  },
+  methods: {
+    addNewZari() {
+      this.zariList.push(this.newZari);
+      this.newZari = { name: '', weight: ''}
+    }
   }
 };
 </script>

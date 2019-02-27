@@ -5,10 +5,10 @@ import Customer from "./views/Customer.vue";
 import Setting from "./views/Setting.vue";
 import Dashboard from "./views/Dashboard.vue";
 import AddCustomer from "./views/AddCustomer.vue";
+import viewCustName from "./views/viewCustName.vue";
 import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
-
 
 Vue.use(Router);
 
@@ -26,7 +26,19 @@ export default new Router({
     {
       path: "/customer",
       name: "Customer",
-      component: Customer
+      component: Customer,
+      children: [
+        {
+          path: "/customer/new", // customer child
+          name: "AddCustomer",
+          component: AddCustomer
+        },
+        {
+          path: "/customer/:name", // customer child
+          name: "viewCustName",
+          component: viewCustName
+        }
+      ]
     },
     {
       path: "/setting",
@@ -37,11 +49,6 @@ export default new Router({
       path: "/dashboard",
       name: "Dashboard",
       component: Dashboard
-    },
-    {
-      path: "/customer/new",
-      name: "AddCustomer",
-      component: AddCustomer
     },
     {
       path: "/item/zari",

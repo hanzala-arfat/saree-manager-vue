@@ -41,10 +41,10 @@
           </div>
           <div class="modal-body">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Enter Cone Colour.">
-              <input type="text" class="form-control" placeholder="Enter Weight.">
+              <input type="text" class="form-control" placeholder="Enter Cone Colour." v-model="newCone.name">
+              <input type="text" class="form-control" placeholder="Enter Weight." v-model="newCone.weight">
               <div class="input-group-append">
-                <button class="btn btn-dark btn-sm" type="button">Add</button>
+                <button class="btn btn-dark btn-sm" type="button" @click.prevent="addNewCone" data-dismiss="modal">Add</button>
               </div>
             </div>
           </div>
@@ -61,10 +61,18 @@ export default {
   name: "ItemCone",
   data() {
     return {
-      coneList: [{ name: "Mehroon", weight: 26.35 }]
+      coneList: [{ name: "Mehroon", weight: 26.35 }],
+      newCone: { name: '', weight: ''}
     };
+  },
+  methods: {
+    addNewCone() {
+      this.coneList.push(this.newCone);
+      this.newCone = { name: '', weight: ''}
+    }
   }
 };
+
 </script>
 
 

@@ -41,10 +41,10 @@
           </div>
           <div class="modal-body">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Enter type of Saree.">
-              <input type="text" class="form-control" placeholder="Enter pcs.">
+              <input type="text" class="form-control" placeholder="Enter type of Saree." v-model="newSaree.name">
+              <input type="text" class="form-control" placeholder="Enter pcs." v-model="newSaree.pcs">
               <div class="input-group-append">
-                <button class="btn btn-dark btn-sm" type="button">Add</button>
+                <button class="btn btn-dark btn-sm" type="button" @click.prevent="addNewSaree" data-dismiss="modal">Add</button>
               </div>
             </div>
           </div>
@@ -61,8 +61,15 @@ export default {
   name: "ItemSaree",
   data() {
     return {
-      sareeList: [{ name: "Tanchuiya", pcs: 14 }]
+      sareeList: [{ name: "Tanchuiya", pcs: 14 }],
+      newSaree: { name: '', pcs: ''}
     };
+  },
+  methods:{
+    addNewSaree(){
+      this.sareeList.push(this.newSaree)
+      this.newSaree = {name:'',pcs:'' }
+    }
   }
 };
 </script>

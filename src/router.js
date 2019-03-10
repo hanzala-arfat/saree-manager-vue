@@ -9,7 +9,7 @@ import viewCustName from "./views/viewCustName.vue";
 import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
-
+import CustomerData from "./views/Customer.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -64,6 +64,11 @@ export default new Router({
       path: "/item/saree",
       name: "ItemSaree",
       component: ItemSaree
+    },
+    {
+      path: "/customer/data",
+      name: "CustomerData",
+      component: CustomerData
     }
   ]
 });

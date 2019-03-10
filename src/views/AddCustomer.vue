@@ -38,7 +38,7 @@
         <div class="form-group">
           <label for="category">Category</label>
           <input
-            type="number"
+            type="text"
             class="form-control"
             id="category"
             placeholder="Enter type of saree"

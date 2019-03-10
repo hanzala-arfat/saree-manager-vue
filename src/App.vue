@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar/>
     <div class="row">
-      <Sidebar/>
+      <!-- <Sidebar/> -->
       <router-view class="views col-md-10"/>
     </div>
   </div>

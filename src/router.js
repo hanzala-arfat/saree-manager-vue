@@ -10,13 +10,19 @@ import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
 import CustomerData from "./views/Customer.vue";
+import Login from "./views/Login.vue";
+
 Vue.use(Router);
 
 export default new Router({
   routes: [
     {
+      path: "/",
+      redirect: "/login"
+    },
+    {
       path: "*",
-      redirect: "/dashboard"
+      redirect: "/login"
     },
     {
       path: "/item",
@@ -64,6 +70,11 @@ export default new Router({
       path: "/item/saree",
       name: "ItemSaree",
       component: ItemSaree
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: Login
     },
     {
       path: "/customer/data",

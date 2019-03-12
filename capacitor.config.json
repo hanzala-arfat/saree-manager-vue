@@ -1,0 +1,6 @@
+{
+  "appId": "com.saree.manager",
+  "appName": "Saree Manager",
+  "bundledWebRuntime": false,
+  "webDir": "dist"
+}

@@ -40,15 +40,15 @@
       </router-link>
     </div>
     <div class="sidebar-element">
-      <router-link to="/setting">
+      <router-link to="/profile">
         <button
           type="button"
           class="btn btn-light"
           @click="toggleActiveCss(3)"
           :class="{ active: activeBtn === 3 }"
         >
-          <i class="fas fa-cog"></i>
-          <p>Settings</p>
+          <i class="fas fa-user"></i>
+          <p>Profile</p>
         </button>
       </router-link>
     </div>

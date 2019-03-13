@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Item from "./views/Item.vue";
 import Customer from "./views/Customer.vue";
-import Setting from "./views/Setting.vue";
+import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
 import AddCustomer from "./views/AddCustomer.vue";
 import viewCustName from "./views/viewCustName.vue";
@@ -11,12 +11,10 @@ import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
 import CustomerData from "./views/Customer.vue";
 import Login from "./views/Login.vue";
-
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       redirect: "/login"
     },
@@ -33,8 +31,7 @@ export default new Router({
       path: "/customer",
       name: "Customer",
       component: Customer,
-      children: [
-        {
+      children: [{
           path: "/customer/new", // customer child
           name: "AddCustomer",
           component: AddCustomer
@@ -47,9 +44,9 @@ export default new Router({
       ]
     },
     {
-      path: "/setting",
-      name: "Setting",
-      component: Setting
+      path: "/profile",
+      name: "Profile",
+      component: Profile
     },
     {
       path: "/dashboard",

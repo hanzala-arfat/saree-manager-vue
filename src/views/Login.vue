@@ -42,6 +42,7 @@
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
         </form>
       </div>
+      <div id="recaptcha-container"></div>
     </div>
   </div>
 </template>
@@ -62,14 +63,29 @@ export default {
   mounted() {
     firebase.auth().useDeviceLanguage();
     let self = this;
+    // window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    //   "sign-in-button",
+    //   {
+    //     size: "invisible",
+    //     callback: function(response) {
+    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+    //       console.log("recaptcha Successful");
+    //       self.sendOtp();
+    //     }
+    //   }
+    // );
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "sign-in-button",
+      "recaptcha-container",
       {
         size: "invisible",
         callback: function(response) {
           // reCAPTCHA solved, allow signInWithPhoneNumber.
+          // ...
           console.log("recaptcha Successful");
-          self.sendOtp();
+        },
+        "expired-callback": function() {
+          // Response expired. Ask user to solve reCAPTCHA again.
+          // ...
         }
       }
     );
@@ -108,14 +124,16 @@ export default {
       }
     },
     enterOtp() {
-      let enteredOtp = self.otp;
+      let self = this;
+      let enteredOtp = this.otp;
+      console.log("asd");
       if (enteredOtp.toString().length === 6) {
         window.confirmationResult
           .confirm(enteredOtp)
           .then(function(result) {
             // User signed in successfully.
             var user = result.user;
-            console.log(user);
+            self.$router.replace("/profile");
             // ...
           })
           .catch(function(error) {

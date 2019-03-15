@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar/>
     <div class="row">
-      <Sidebar/>
+      <Sidebar v-if="loged"></Sidebar>
       <router-view class="views col-md-10"/>
     </div>
   </div>
@@ -11,11 +11,31 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import firebase from "firebase";
 
 export default {
   components: {
     Navbar,
     Sidebar
+  },
+  data() {
+    return {
+      loged: false
+    };
+  },
+  async mounted() {
+    let self = this;
+    await firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log("logged in");
+        self.loged = true;
+      } else {
+        // No user is signed in.
+        console.log("logged out");
+        self.loged = false;
+      }
+    });
   }
 };
 </script>

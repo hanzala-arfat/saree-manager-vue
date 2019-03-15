@@ -1,12 +1,20 @@
 <template>
-  <div class="setting">
+  <div class="Profile-page">
     <div class="container">
       <!-- <div class="title-bar">
         <h2>Profile</h2>
       </div>-->
       <div class="profile mt-5">
         <img src="@/assets/profile.png" class="rounded mb-3" alt="Cinque Terre">
-        <p class="h2" v-if="myName">{{myName}}</p>
+        <div v-if="myName">
+          <p class="h2">{{myName}}</p>
+          <button
+            class="btn btn-lg btn-primary btn-block mt-1"
+            type="submit"
+            @click.prevent="logout"
+          >Logout</button>
+        </div>
+
         <div v-else>
           <input
             type="text"
@@ -30,34 +38,45 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from "firebase"; // new syntax
 // let firebase = require('firebase')  // old syntax
 export default {
-  name: "Setting",
+  name: "Profile",
   data() {
     return {
       myName: "",
       userID: undefined
     };
   },
-  mounted() {
-    let self = this;
-    this.userID = firebase.auth().currentUser.uid;
-    let db = firebase.firestore();
-    db.collection("users")
-      .doc(this.userID)
-      .get()
-      .then(function(doc) {
-        if (doc.exists) {
-          self.myName = doc.data().profile.name;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
+  async mounted() {
+    // data lena db se
+    let self = this; // this self var me bas rakha gaya h
+    let a = await firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        self.userID = user.uid;
+      } else {
+        console.log("Not logged in -> Profile");
+      }
+    });
+    if (this.userID) {
+      let db = firebase.firestore();
+      db.collection("users")
+        .doc(this.userID)
+        .get()
+        .then(function(doc) {
+          if (doc.exists) {
+            self.myName = doc.data().profile.name; // myName par db se user name inislize hua h
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+    } else {
+      console.log("user undefined");
+    }
   },
   methods: {
     save() {
@@ -77,6 +96,21 @@ export default {
         .catch(function(error) {
           console.error("Error writing document: ", error);
         });
+    },
+    logout() {
+      let self = this;
+      firebase
+        .auth()
+        .signOut()
+        .then(
+          function() {
+            console.log("Signed Out");
+            self.$router.push("/login");
+          },
+          function(error) {
+            console.error("Sign Out Error", error);
+          }
+        );
     }
   }
 };

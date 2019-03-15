@@ -11,17 +11,11 @@ import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
 import CustomerData from "./views/Customer.vue";
 import Login from "./views/Login.vue";
+// import firebase from "firebase";
 Vue.use(Router);
 
-export default new Router({
-  routes: [{
-      path: "/",
-      redirect: "/login"
-    },
-    {
-      path: "*",
-      redirect: "/login"
-    },
+const router = new Router({
+  routes: [
     {
       path: "/item",
       name: "Item",
@@ -31,7 +25,8 @@ export default new Router({
       path: "/customer",
       name: "Customer",
       component: Customer,
-      children: [{
+      children: [
+        {
           path: "/customer/new", // customer child
           name: "AddCustomer",
           component: AddCustomer
@@ -80,3 +75,33 @@ export default new Router({
     }
   ]
 });
+
+// let loggedUser = false;
+
+// setTimeout(() => {
+//   firebase.auth().onAuthStateChanged(user => {
+//     if (user) {
+//       // User is signed in.
+//       loggedUser = true;
+//     } else {
+//       // No user is signed in.
+//       loggedUser = false;
+//     }
+//   });
+// }, 1000);
+
+// router.beforeEach((to, from, next) => {
+//   if (loggedUser && to.path === "/login") {
+//     next({
+//       path: "/dashboard"
+//     });
+//   }
+//   if (!loggedUser && to.path != "/login") {
+//     console.log('2nd')
+//     next({
+//       redirect: "/login"
+//     });
+//   }
+// });
+
+export default router;

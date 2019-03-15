@@ -1,6 +1,5 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
 import firebase from "firebase";
 
 var config = {
@@ -12,6 +11,8 @@ var config = {
   messagingSenderId: "601196583561"
 };
 firebase.initializeApp(config);
+
+import router from "./router";
 
 Vue.config.productionTip = false;
 

@@ -38,7 +38,7 @@
             required
             autofocus
           >
-          <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" @click="enterOtp">Done</button>
+          <button class="btn btn-lg btn-primary btn-block mt-3" :class="{ 'disabled':disable }" type="submit" @click="enterOtp">Done</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
         </form>
       </div>
@@ -49,7 +49,6 @@
 
 <script>
 import firebase from "firebase";
-import { send } from "q";
 
 export default {
   name: "Login",
@@ -57,23 +56,13 @@ export default {
     return {
       bol: false,
       phone: "",
-      otp: ""
+      otp: "",
+      disable:false
     };
   },
   mounted() {
     firebase.auth().useDeviceLanguage();
     let self = this;
-    // window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-    //   "sign-in-button",
-    //   {
-    //     size: "invisible",
-    //     callback: function(response) {
-    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
-    //       console.log("recaptcha Successful");
-    //       self.sendOtp();
-    //     }
-    //   }
-    // );
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
       "recaptcha-container",
       {
@@ -124,22 +113,24 @@ export default {
       }
     },
     enterOtp() {
+      this.disable=true;
       let self = this;
       let enteredOtp = this.otp;
-      console.log("asd");
       if (enteredOtp.toString().length === 6) {
         window.confirmationResult
           .confirm(enteredOtp)
           .then(function(result) {
             // User signed in successfully.
             var user = result.user;
-            self.$router.replace("/profile");
+            self.$router.push("/profile");
             // ...
           })
           .catch(function(error) {
             // User couldn't sign in (bad verification code?)
             // ...
+
             console.log("Wrong Verfication Code");
+            self.disable= false;
           });
       }
     }

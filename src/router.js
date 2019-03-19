@@ -9,13 +9,15 @@ import viewCustName from "./views/viewCustName.vue";
 import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
-import CustomerData from "./views/Customer.vue";
 import Login from "./views/Login.vue";
-// import firebase from "firebase";
 Vue.use(Router);
 
-const router = new Router({
+let router = new Router({
   routes: [
+    {
+      path: "/",
+      redirect: "/dashboard"
+    },
     {
       path: "/item",
       name: "Item",
@@ -28,12 +30,12 @@ const router = new Router({
       children: [
         {
           path: "/customer/new", // customer child
-          name: "AddCustomer",
+          name: "Customer",
           component: AddCustomer
         },
         {
           path: "/customer/:name", // customer child
-          name: "viewCustName",
+          name: "Customer",
           component: viewCustName
         }
       ]
@@ -50,58 +52,40 @@ const router = new Router({
     },
     {
       path: "/item/zari",
-      name: "ItemZari",
+      name: "Item",
       component: ItemZari
     },
     {
       path: "/item/cone",
-      name: "ItemCone",
+      name: "Item",
       component: ItemCone
     },
     {
       path: "/item/saree",
-      name: "ItemSaree",
+      name: "Item",
       component: ItemSaree
     },
     {
       path: "/login",
       name: "Login",
       component: Login
-    },
-    {
-      path: "/customer/data",
-      name: "CustomerData",
-      component: CustomerData
     }
   ]
 });
 
-// let loggedUser = false;
-
-// setTimeout(() => {
-//   firebase.auth().onAuthStateChanged(user => {
-//     if (user) {
-//       // User is signed in.
-//       loggedUser = true;
-//     } else {
-//       // No user is signed in.
-//       loggedUser = false;
-//     }
-//   });
-// }, 1000);
-
-// router.beforeEach((to, from, next) => {
-//   if (loggedUser && to.path === "/login") {
-//     next({
-//       path: "/dashboard"
-//     });
-//   }
-//   if (!loggedUser && to.path != "/login") {
-//     console.log('2nd')
-//     next({
-//       redirect: "/login"
-//     });
-//   }
-// });
+router.beforeEach(async (to, from, next) => {
+  let loggedUser = window.localStorage.getItem("userID");
+  if (!loggedUser && to.name != "Login") {
+    return next({
+      path: "/login"
+    });
+  }
+  if (loggedUser && to.name === "Login") {
+    return next({
+      path: "/dashboard"
+    });
+  }
+  next();
+});
 
 export default router;

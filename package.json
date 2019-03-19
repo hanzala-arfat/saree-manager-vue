@@ -13,7 +13,7 @@
     "@capacitor/core": "^1.0.0-beta.19",
     "firebase": "^5.8.6",
     "vue": "^2.6.6",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

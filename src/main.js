@@ -18,5 +18,16 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  beforeCreate() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log("Main JS logged in");
+        window.localStorage.setItem("userID", user.uid);
+      } else {
+        console.log("Main JS logged out");
+        window.localStorage.removeItem("userID");
+      }
+    });
+  },
   render: h => h(App)
 }).$mount("#app");

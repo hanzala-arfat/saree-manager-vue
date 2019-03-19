@@ -13,10 +13,6 @@
 import firebase from "firebase";
 
 export default {
-  name: "Dashboard",
-  mounted() {
-    let user = firebase.auth();
-    console.log(user.currentUser.uid);
-  }
+  name: "Dashboard"
 };
 </script>

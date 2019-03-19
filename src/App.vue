@@ -23,19 +23,8 @@ export default {
       loged: false
     };
   },
-  async mounted() {
-    let self = this;
-    await firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        console.log("logged in");
-        self.loged = true;
-      } else {
-        // No user is signed in.
-        console.log("logged out");
-        self.loged = false;
-      }
-    });
+  beforeMount() {
+    this.loged = window.localStorage.getItem("userID");
   }
 };
 </script>

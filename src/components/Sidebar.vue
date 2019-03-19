@@ -5,8 +5,7 @@
         <button
           type="button"
           class="btn btn-light"
-          @click="toggleActiveCss(0)"
-          :class="{ active: activeBtn === 0 }"
+          :class="{ active: activeRoute === 'Dashboard' }"
         >
           <i class="fas fa-home"></i>
           <p>Dashboard</p>
@@ -15,12 +14,7 @@
     </div>
     <div class="sidebar-element">
       <router-link to="/item">
-        <button
-          type="button"
-          class="btn btn-light"
-          @click="toggleActiveCss(1)"
-          :class="{ active: activeBtn === 1 }"
-        >
+        <button type="button" class="btn btn-light" :class="{ active: activeRoute === 'Item' }">
           <i class="fas fa-dice-d6"></i>
           <p>Materials</p>
         </button>
@@ -28,12 +22,7 @@
     </div>
     <div class="sidebar-element">
       <router-link to="/customer">
-        <button
-          type="button"
-          class="btn btn-light"
-          @click="toggleActiveCss(2)"
-          :class="{ active: activeBtn === 2 }"
-        >
+        <button type="button" class="btn btn-light" :class="{ active: activeRoute === 'Customer' }">
           <i class="fas fa-users"></i>
           <p>Customer</p>
         </button>
@@ -41,12 +30,7 @@
     </div>
     <div class="sidebar-element">
       <router-link to="/profile">
-        <button
-          type="button"
-          class="btn btn-light"
-          @click="toggleActiveCss(3)"
-          :class="{ active: activeBtn === 3 }"
-        >
+        <button type="button" class="btn btn-light" :class="{ active: activeRoute === 'Profile' }">
           <i class="fas fa-user"></i>
           <p>Profile</p>
         </button>
@@ -60,13 +44,12 @@
 export default {
   name: "Sidebar",
   data() {
-    return {
-      activeBtn: 0
-    };
+    return {};
   },
-  methods: {
-    toggleActiveCss(clickedBtn) {
-      this.activeBtn = clickedBtn;
+  methods: {},
+  computed: {
+    activeRoute() {
+      return this.$route.name;
     }
   }
 };

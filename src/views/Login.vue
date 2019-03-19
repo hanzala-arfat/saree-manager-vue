@@ -18,7 +18,6 @@
           <button
             id="sign-in-button"
             class="btn btn-lg btn-primary btn-block mt-3"
-            type="submit"
             @click.prevent="sendOtp"
           >Proceed</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
@@ -38,7 +37,11 @@
             required
             autofocus
           >
-          <button class="btn btn-lg btn-primary btn-block mt-3" :class="{ 'disabled':disable }" type="submit" @click="enterOtp">Done</button>
+          <button
+            class="btn btn-lg btn-primary btn-block mt-3"
+            :class="{ 'disabled':disable }"
+            @click.prevent="enterOtp"
+          >Done</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
         </form>
       </div>
@@ -57,7 +60,7 @@ export default {
       bol: false,
       phone: "",
       otp: "",
-      disable:false
+      disable: false
     };
   },
   mounted() {
@@ -113,7 +116,7 @@ export default {
       }
     },
     enterOtp() {
-      this.disable=true;
+      this.disable = true;
       let self = this;
       let enteredOtp = this.otp;
       if (enteredOtp.toString().length === 6) {
@@ -122,15 +125,15 @@ export default {
           .then(function(result) {
             // User signed in successfully.
             var user = result.user;
+            window.userID = result.user.uid;
             self.$router.push("/profile");
             // ...
           })
           .catch(function(error) {
             // User couldn't sign in (bad verification code?)
             // ...
-
             console.log("Wrong Verfication Code");
-            self.disable= false;
+            self.disable = false;
           });
       }
     }

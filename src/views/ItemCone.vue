@@ -81,22 +81,11 @@ export default {
     return {
       coneList: [],
       newCone: { name: "", weight: "" },
-      userID: undefined
+      userID: window.localStorage.getItem("userID") // storage (browser) se user id milti h 
     };
   },
   async mounted() {
     let self = this;
-    await firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        self.userID = user.uid;
-        window.userID = user.uid;
-        console.log(self.userID);
-      } else {
-        // No user is signed in.
-        console.log("Not logged in -> Item/Cone");
-      }
-    });
     if (this.userID) {
       let db = firebase.firestore(); // data base leke list show karna
       db.collection("users")

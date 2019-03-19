@@ -80,21 +80,13 @@ export default {
   name: "ItemZari",
   data() {
     return {
-      userID: undefined,
+      userID: window.localStorage.getItem("userID"),
       zariList: [],
       newZari: { name: "", weight: "" } //puh
     };
   },
   async mounted() {
     let self = this; // this self var me bas rakha gaya h
-    await firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        self.userID = user.uid;
-        window.userID = user.uid;
-      } else {
-        console.log("Not logged in -> Item/Zari");
-      }
-    });
     if (this.userID) {   
       let db = firebase.firestore(); // data base leke list show karna
       db.collection("users")

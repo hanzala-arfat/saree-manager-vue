@@ -63,19 +63,11 @@ export default {
         phone: "",
         category: "",
         tani: 0
-      }
+      },
+      userID: window.localStorage.getItem("userID")
     };
   },
-  async mounted() {
-    let self = this;
-    await firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        self.userID = user.uid;
-      } else {
-        console.log("Singn Out");
-      }
-    });
-  },
+
   methods: {
     goBack() {
       this.$router.go(-1);

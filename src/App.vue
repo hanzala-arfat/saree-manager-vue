@@ -24,7 +24,10 @@ export default {
     };
   },
   beforeMount() {
-    this.loged = window.localStorage.getItem("userID");
+    let self = this;
+    firebase.auth().onAuthStateChanged(function() {
+      self.loged = window.localStorage.getItem("userID");
+    });
   }
 };
 </script>

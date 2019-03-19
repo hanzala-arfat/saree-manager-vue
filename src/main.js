@@ -25,7 +25,9 @@ new Vue({
         window.localStorage.setItem("userID", user.uid);
       } else {
         console.log("Main JS logged out");
-        window.localStorage.removeItem("userID");
+        if (window.localStorage.getItem("userID")) {
+          window.localStorage.removeItem("userID");
+        }
       }
     });
   },

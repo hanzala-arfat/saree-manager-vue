@@ -45,20 +45,12 @@ export default {
   data() {
     return {
       myName: "",
-      userID: undefined
+      userID: window.localStorage.getItem("userID")
     };
   },
   async mounted() {
     // data lena db se
     let self = this; // this self var me bas rakha gaya h
-    let a = await firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        self.userID = user.uid;
-        window.userID = user.uid;
-      } else {
-        console.log("Not logged in -> Profile");
-      }
-    });
     if (this.userID) {
       let db = firebase.firestore();
       db.collection("users")
@@ -106,6 +98,7 @@ export default {
         .then(
           function() {
             console.log("Signed Out");
+            window.localStorage.removeItem("userID");
             self.$router.push("/login");
           },
           function(error) {

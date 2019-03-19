@@ -124,8 +124,7 @@ export default {
           .confirm(enteredOtp)
           .then(function(result) {
             // User signed in successfully.
-            var user = result.user;
-            window.userID = result.user.uid;
+            window.localStorage.setItem("userID", result.user.uid);
             self.$router.push("/profile");
             // ...
           })

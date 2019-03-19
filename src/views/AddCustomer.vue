@@ -53,6 +53,7 @@
 
 
 <script>
+import firebase from "firebase";
 export default {
   name: "AddCustomer",
   data() {
@@ -65,14 +66,42 @@ export default {
       }
     };
   },
+  async mounted() {
+    let self = this;
+    await firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        self.userID = user.uid;
+      } else {
+        console.log("Singn Out");
+      }
+    });
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
       this.$emit("submit"); //start event without argument
     },
     submitNewCustomer() {
-      this.$router.go(-1);
-      this.$emit("submit", this.customer); // start event and send data to Customer.vue
+      let self = this;
+      let db = firebase.firestore();
+      db.collection("users")
+        .doc(this.userID)
+        .set(
+          {
+            workers: {
+              [self.customer.phone]: self.customer
+            }
+          },
+          { merge: true }
+        )
+        .then(function() {
+          console.log("Customer successfuly added");
+          self.$router.go(-1);
+          self.$emit("submit", self.customer); // start event and send data to Customer.vue
+        })
+        .catch(function(error) {
+          console.log("Customer adding error", error);
+        });
     }
   }
 };

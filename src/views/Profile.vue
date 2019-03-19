@@ -54,6 +54,7 @@ export default {
     let a = await firebase.auth().onAuthStateChanged(user => {
       if (user) {
         self.userID = user.uid;
+        window.userID = user.uid;
       } else {
         console.log("Not logged in -> Profile");
       }

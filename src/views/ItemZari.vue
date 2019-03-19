@@ -41,10 +41,28 @@
           </div>
           <div class="modal-body">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Enter Zari Colour." v-model="newZari.name">
-              <input type="text" class="form-control" placeholder="Enter Weight."  v-model="newZari.weight">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Zari Colour."
+                v-model="newZari.name"
+                autofocus
+                required
+              >
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Weight."
+                v-model="newZari.weight"
+                required
+              >
               <div class="input-group-append">
-                <button class="btn btn-dark btn-sm" type="button" @click.prevent="addNewZari" data-dismiss="modal">Add</button>
+                <button
+                  class="btn btn-dark btn-sm"
+                  type="submit"
+                  @click.prevent="addNewZari"
+                  data-dismiss="modal"
+                >Add</button>
               </div>
             </div>
           </div>
@@ -57,21 +75,86 @@
 
 
 <script>
+import firebase from "firebase";
 export default {
   name: "ItemZari",
   data() {
     return {
-      zariList: [
-        { name: "Pista", weight: 6.75 }
-      ],
-      newZari: { name: '', weight: ''}
+      userID: undefined,
+      zariList: [],
+      newZari: { name: "", weight: "" } //puh
     };
+  },
+  async mounted() {
+    let self = this; // this self var me bas rakha gaya h
+    await firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        self.userID = user.uid;
+        window.userID = user.uid;
+      } else {
+        console.log("Not logged in -> Item/Zari");
+      }
+    });
+    if (this.userID) {   
+      let db = firebase.firestore(); // data base leke list show karna
+      db.collection("users")
+        .doc(this.userID)
+        .get()
+        .then(function(doc) {
+          if (doc.exists) {
+            // self.name = doc.data().profile.name;
+            let data1 = doc.data().stock.zari;
+            for (var key in data1) {
+              //console.log(key + data1[key]);
+
+              var element = {};
+              element = { name: key, weight: data1[key] };
+              self.zariList.push(element);
+            }
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+    } else {
+      console.log("user undefined");
+    }
   },
   methods: {
     addNewZari() {
-      this.zariList.push(this.newZari);
-      this.newZari = { name: '', weight: ''}
+      // data push
+      let self = this;
+      let db = firebase.firestore(); // yahan se data push hota hai
+      db.collection("users")
+        .doc(this.userID)
+        .set(
+          {
+            stock: {
+              zari: {
+                [this.newZari.name]: this.newZari.weight
+              }
+            }
+          },
+          { merge: true } // overwrite nhi hoga
+        )
+        .then(function() {
+          console.log("Document successfully written!");
+          self.zariList.push({
+            name: self.newZari.name,
+            weight: self.newZari.weight
+          });
+          self.newZari = { name: "", weight: "" };
+        })
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
     }
+
+    // this.zariList.push(this.newZari);
+    // this.newZari = { name: '', weight: ''}
   }
 };
 </script>

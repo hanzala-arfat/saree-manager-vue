@@ -1,6 +1,6 @@
 <template>
   <div class="customer-page">
-    <div v-if="!newButtonClicked">
+    <div v-if="!childActive">
       <div class="container">
         <div class="title-bar">
           <h2>Customers</h2>
@@ -9,7 +9,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm"
-              @click="newButtonClicked = true"
+              @click="childActive = true"
             >+ Add Customer</button>
           </router-link>
         </div>
@@ -52,16 +52,16 @@ export default {
         { name: "Amir", tani: 18 },
         { name: "Hashim", tani: 20 }
       ],
-      newButtonClicked: false
+      childActive: false
     };
   },
   methods: {
     onNewCustSubmit(custData) {
-      this.newButtonClicked = false;
+      this.childActive = false;
       if (custData) this.userList.push(custData);
     },
     listclick() {
-      this.newButtonClicked = true;
+      this.childActive = true;
     }
   }
 };

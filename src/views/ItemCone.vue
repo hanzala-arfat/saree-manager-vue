@@ -41,10 +41,27 @@
           </div>
           <div class="modal-body">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Enter Cone Colour." v-model="newCone.name">
-              <input type="text" class="form-control" placeholder="Enter Weight." v-model="newCone.weight">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Cone Colour."
+                v-model="newCone.name"
+              >
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Weight."
+                v-model="newCone.weight"
+                autofocus
+                required
+              >
               <div class="input-group-append">
-                <button class="btn btn-dark btn-sm" type="button" @click.prevent="addNewCone" data-dismiss="modal">Add</button>
+                <button
+                  class="btn btn-dark btn-sm"
+                  type="button"
+                  @click.prevent="addNewCone"
+                  data-dismiss="modal"
+                >Add</button>
               </div>
             </div>
           </div>
@@ -57,22 +74,83 @@
 
 
 <script>
+import firebase from "firebase";
 export default {
   name: "ItemCone",
   data() {
     return {
-      coneList: [{ name: "Mehroon", weight: 26.35 }],
-      newCone: { name: '', weight: ''}
+      coneList: [],
+      newCone: { name: "", weight: "" },
+      userID: undefined
     };
   },
+  async mounted() {
+    let self = this;
+    await firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        self.userID = user.uid;
+        window.userID = user.uid;
+        console.log(self.userID);
+      } else {
+        // No user is signed in.
+        console.log("Not logged in -> Item/Cone");
+      }
+    });
+    if (this.userID) {
+      let db = firebase.firestore(); // data base leke list show karna
+      db.collection("users")
+        .doc(this.userID)
+        .get()
+        .then(function(doc) {
+          if (doc.exists) {
+            let data1 = doc.data().stock.cone;
+            for (var key in data1) {
+              //console.log(key + data1[key]);
+              var element = {};
+              element = { name: key, weight: data1[key] }; //element objeect me leke fir coneList push
+              self.coneList.push(element); // kar ke show kiya
+            }
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+    } else {
+      console.log("user undefined");
+    }
+  },
+
   methods: {
     addNewCone() {
-      this.coneList.push(this.newCone);
-      this.newCone = { name: '', weight: ''}
+      self = this;
+      let db = firebase.firestore();
+      db.collection("users")
+        .doc(this.userID)
+        .set(
+          {
+            stock: {
+              cone: {
+                [this.newCone.name]: this.newCone.weight
+              }
+            }
+          },
+          { merge: true }
+        )
+        .then(function() {
+          console.log("Document successfully written!");
+          self.coneList.push(self.newCone);
+          self.newCone = { name: "", weight: "" };
+        })
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
     }
   }
 };
-
 </script>
 
 

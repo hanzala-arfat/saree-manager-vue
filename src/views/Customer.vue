@@ -51,7 +51,7 @@ export default {
     },
     customerInfoSelected(customer) {
       this.childActive = true;
-      this.$router.push({ path: `/customer/${customer.id}` });
+      this.$router.push({ path: `/customer/${customer.doc_id}` });
     }
   }
 };

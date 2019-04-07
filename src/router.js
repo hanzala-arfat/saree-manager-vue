@@ -14,7 +14,8 @@ import store from "./store/store";
 Vue.use(Router);
 
 let router = new Router({
-  routes: [{
+  routes: [
+    {
       path: "/",
       redirect: "/dashboard"
     },
@@ -27,7 +28,8 @@ let router = new Router({
       path: "/customer",
       name: "Customer",
       component: Customer,
-      children: [{
+      children: [
+        {
           path: "/customer/new", // customer child
           name: "Customer",
           component: AddCustomer

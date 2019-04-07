@@ -13,10 +13,16 @@ firebase.initializeApp(config);
 
 const db = firestore();
 
-auth().onAuthStateChanged(user => {
+auth().onAuthStateChanged(async user => {
   if (user) {
     store.commit("setUserID", user.uid);
     store.commit("setAuth", true);
+    await store.dispatch("getProfileInfo");
+    store.dispatch("checkRole");
+    if (!store.getters.isWorker) {
+      store.dispatch("getCustomerList");
+      store.dispatch("getTotalStockData");
+    }
   } else {
     store.commit("setUserID", undefined);
     store.commit("setAuth", false);

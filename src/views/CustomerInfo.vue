@@ -12,72 +12,7 @@
         <i class="fas fa-scroll"></i> Add Details
       </button>
     </div>
-    <div class="accordion" id="accordionExample" v-if="currentTaniData">
-      <div class="card" v-for="(key, index) in Object.keys(currentTaniData)" :key="index">
-        <div class="card-header" :id="index">
-          <h2 class="mb-0">
-            <button
-              class="btn font-weight-bold"
-              type="button"
-              data-toggle="collapse"
-              :data-target="'#no'+ index "
-              aria-expanded="true"
-              :aria-controls="'no' + index "
-            >Date {{currentTaniData[key].date}}</button>
-          </h2>
-        </div>
-
-        <div
-          :id="'no'+ index"
-          class="collapse"
-          :aria-labelledby="index"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item detail" v-if="currentTaniData[key].tani">
-                <i class="fas fa-chevron-right"></i>
-                &nbsp;Tani: {{currentTaniData[key].tani}}
-              </li>
-
-              <li class="list-group-item" v-if="currentTaniData[key].cone">
-                <p
-                  class="detail mb-0"
-                  v-for="(typeofcone, i) in Object.keys(currentTaniData[key].cone)"
-                  :key="i"
-                >
-                  <i class="fas fa-chevron-right"></i>
-                  &nbsp;
-                  {{typeofcone}} - Cone : {{currentTaniData[key].cone[typeofcone]}} Kg
-                </p>
-              </li>
-
-              <li class="list-group-item detail" v-if="currentTaniData[key].saree">
-                <i class="fas fa-chevron-right"></i>
-                &nbsp;Saree Details: {{currentTaniData[key].saree}}
-              </li>
-
-              <li class="list-group-item" v-if="currentTaniData[key].zari">
-                <p
-                  class="detail mb-0"
-                  v-for="(typeofzari, i) in Object.keys(currentTaniData[key].zari)"
-                  :key="i"
-                >
-                  <i class="fas fa-chevron-right"></i>
-                  &nbsp;
-                  {{typeofzari}} - Zari : {{currentTaniData[key].zari[typeofzari]}} Kg
-                </p>
-              </li>
-
-              <li class="list-group-item detail" v-if="currentTaniData[key].money">
-                <i class="fas fa-chevron-right"></i>
-                &nbsp;Money: {{currentTaniData[key].money}}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TaniDataList :taniData="currentTaniData"/>
     <div class="modal fade" id="addNewDataModal" tabindex="1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -180,11 +115,14 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { mapGetters } from "vuex";
+import TaniDataList from "@/components/TaniDataList.vue";
 
 export default {
   name: "CustomerInfo",
+  components: {
+    TaniDataList
+  },
   data() {
     return {
       newData: {
@@ -222,25 +160,29 @@ export default {
       if (this.validateForm()) {
         this.newData.date = this.date.today;
 
-        if (this.newData.zari.type != "Zari" && this.newData.zari.weight) {
-          this.stockSyncData.Zari = {
-            [this.newData.zari.type]: parseFloat(this.newData.zari.weight)
-          };
-          this.newData.zari = {
-            [this.newData.zari.type]: parseFloat(this.newData.zari.weight)
-          };
-        } else {
-          delete this.newData.zari;
-        }
-        if (this.newData.cone.type != "Cone" && this.newData.cone.weight) {
-          this.stockSyncData.Cone = {
-            [this.newData.cone.type]: parseFloat(this.newData.cone.weight)
-          };
-          this.newData.cone = {
-            [this.newData.cone.type]: parseFloat(this.newData.cone.weight)
-          };
-        } else {
-          delete this.newData.cone;
+        try {
+          if (this.newData.zari.type != "Zari" && this.newData.zari.weight) {
+            this.stockSyncData.Zari = {
+              [this.newData.zari.type]: parseFloat(this.newData.zari.weight)
+            };
+            this.newData.zari = {
+              [this.newData.zari.type]: parseFloat(this.newData.zari.weight)
+            };
+          } else {
+            delete this.newData.zari;
+          }
+          if (this.newData.cone.type != "Cone" && this.newData.cone.weight) {
+            this.stockSyncData.Cone = {
+              [this.newData.cone.type]: parseFloat(this.newData.cone.weight)
+            };
+            this.newData.cone = {
+              [this.newData.cone.type]: parseFloat(this.newData.cone.weight)
+            };
+          } else {
+            delete this.newData.cone;
+          }
+        } catch (error) {
+          console.log(error);
         }
 
         if (this.currentTaniData[this.date.today]) {
@@ -257,8 +199,9 @@ export default {
                 this.newData.cone[type] =
                   parseFloat(this.newData.cone[type]) +
                   parseFloat(this.currentTaniData[this.date.today].cone[type]);
-                this.newData.cone[type] =
-                  Math.round(this.newData.cone[type] * 100) / 100;
+                this.newData.cone[type] = parseFloat(
+                  this.newData.cone[type].toFixed(2)
+                );
               }
             }
           }
@@ -269,8 +212,9 @@ export default {
                 this.newData.zari[type] =
                   parseFloat(this.newData.zari[type]) +
                   parseFloat(this.currentTaniData[this.date.today].zari[type]);
-                this.newData.zari[type] =
-                  Math.round(this.newData.zari[type] * 100) / 100;
+                this.newData.zari[type] = parseFloat(
+                  this.newData.zari[type].toFixed(2)
+                );
               }
             }
           }
@@ -337,17 +281,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-  margin-right: 0.2rem;
-  font-size: 0.9rem;
-}
-.card-body,
-.card-header {
-  padding: 0;
-}
-.card {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
-}
 .btn-dark {
   border-top-right-radius: 0.25rem !important;
   border-bottom-right-radius: 0.25rem !important;
@@ -361,11 +294,5 @@ button {
 .input-group-append > .btn {
   width: 100%;
   text-align: left;
-}
-.detail {
-  font-size: 14px;
-}
-.detail > i {
-  font-size: 12px;
 }
 </style>

@@ -35,24 +35,36 @@ export default {
     addNewCustomer({ rootState }, { newCustomer }) {
       return new Promise((resolve, reject) => {
         const newTaniDoc = db.collection("TaniData").doc();
+        const newUserDoc = db.collection("Users").doc();
         newTaniDoc.set({
           active: true,
-          initiated_at: firebase.firestore.FieldValue.serverTimestamp()
+          initiated_at: firebase.firestore.FieldValue.serverTimestamp(),
+          data_of: newCustomer.phone
         });
-        const newUserDoc = db.collection("Users").doc();
         newUserDoc.set({
           is_worker: true,
           created_at: firebase.firestore.FieldValue.serverTimestamp(),
           name: newCustomer.name,
-          phone_number: newCustomer.phone
+          phone_number: "+91" + newCustomer.phone
         });
+        db.collection("Roles")
+          .doc()
+          .set(
+            {
+              phone_number: "+91" + newCustomer.phone,
+              role: "Worker"
+            },
+            {
+              merge: true
+            }
+          );
         db.collection("Workers")
           .doc(rootState.userAuthModule.userID)
           .set(
             {
               [newUserDoc.id]: {
                 ...newCustomer,
-                id: newUserDoc.id,
+                doc_id: newUserDoc.id,
                 current_tani_id: newTaniDoc.id
               }
             },
@@ -68,7 +80,7 @@ export default {
           });
       });
     },
-    getCustomerTaniData({ state, commit }, { customerID, month, year }) {
+    getCustomerTaniData({ state, commit }, { customerID }) {
       return new Promise((resolve, reject) => {
         const tani_id = state.customerList[customerID].current_tani_id;
         db.collection("TaniData")
@@ -105,10 +117,20 @@ export default {
                   let syncedValue =
                     stockDoc.data()[stock][typeofstock] -
                     syncData[stock][typeofstock];
-                  syncedValue = (syncedValue * 100) / 100;
-                  transaction.update(stockRef, {
-                    [`${stock}.${typeofstock}`]: syncedValue
-                  });
+                  syncedValue = parseFloat(parseFloat(syncedValue).toFixed(2));
+                  //set stock first
+                  transaction.set(
+                    stockRef,
+                    {
+                      [stock]: {
+                        [typeofstock]: syncedValue
+                      }
+                    },
+                    {
+                      merge: true
+                    }
+                  );
+                  //set tani data
                   transaction.set(
                     taniDataRef,
                     {
@@ -128,76 +150,14 @@ export default {
             })
             .then(() => {
               resolve();
+              console.log("Successfully added tani data.");
             })
             .catch(err => {
               console.log(err);
               reject(err);
             });
         });
-        //taniDataRef
-        //   .set(
-        //     {
-        //       data: {
-        //         [date.today]: {
-        //           ...newData,
-        //           created_at: firebase.firestore.FieldValue.serverTimestamp()
-        //         }
-        //       }
-        //     },
-        //     {
-        //       merge: true
-        //     }
-        //   )
-        //   .then(() => {
-        //     resolve();
-        //   })
-        //   .catch(err => {
-        //     reject(err);
-        //   });
       });
-    },
-    syncStockData({ rootState }, { stockSyncData }) {
-      for (let stock in this.stockSyncData) {
-        for (let typeOfStock in this.stockSyncData[stock]) {
-          db.collection(`/users/${rootState.userAuthModule.userID}/stock/`)
-            .doc(stock.toString())
-            .get()
-            .then(doc => {
-              if (doc.exists) {
-                let currentValue = doc.data()[typeOfStock];
-                let finalValue = parseFloat(
-                  parseFloat(currentValue) -
-                    parseFloat(self.stockSyncData[stock][typeOfStock])
-                ).toFixed(2);
-
-                db.collection(
-                  `/users/${rootState.userAuthModule.userID}/stock/`
-                )
-                  .doc(stock.toString())
-                  .set(
-                    {
-                      [typeOfStock]: finalValue
-                    },
-                    {
-                      merge: true
-                    }
-                  )
-                  .then(() => {
-                    console.log(
-                      `Successfully synced data for ${stock} - ${typeOfStock}`
-                    );
-                    self.stockSyncData = {};
-                  })
-                  .catch(err => {
-                    console.log(
-                      `Error syncing data for ${stock} - ${typeOfStock}`,
-                      err
-                    );
-                  });
-              }
-            });
-        }
-      }
     }
   }
 };

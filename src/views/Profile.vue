@@ -1,9 +1,6 @@
 <template>
   <div class="Profile-page">
     <div class="container">
-      <!-- <div class="title-bar">
-        <h2>Profile</h2>
-      </div>-->
       <div class="profile mt-5">
         <img src="@/assets/profile.png" class="rounded mb-3" alt="Cinque Terre">
         <div v-if="username">
@@ -27,7 +24,7 @@
           <button
             class="btn btn-lg btn-primary btn-block mt-3"
             type="submit"
-            @click.prevent="save"
+            @click.prevent="saveUsername"
           >Save</button>
         </div>
 
@@ -49,16 +46,12 @@ export default {
   computed: {
     ...mapGetters(["isAuthenticated", "username"])
   },
-  mounted() {
-    if (this.isAuthenticated && !this.username) {
-      this.$store.dispatch("getUserName");
-    }
-  },
   methods: {
     saveUsername() {
       if (document.getElementById("name").value) {
-        this.username = document.getElementById("name").value;
-        this.$store.dispatch("setUserName", { enteredName: this.username });
+        this.$store.dispatch("setProfileInfo", {
+          enteredName: document.getElementById("name").value
+        });
       } else {
         console.log("Enter Valid Name");
       }

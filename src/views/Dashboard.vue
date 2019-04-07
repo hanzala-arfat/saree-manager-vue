@@ -10,13 +10,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
-
 export default {
-  name: "Dashboard",
-  mounted() {
-    this.$store.dispatch("getCustomerList");
-    this.$store.dispatch("getTotalStockData");
-  }
+  name: "Dashboard"
 };
 </script>

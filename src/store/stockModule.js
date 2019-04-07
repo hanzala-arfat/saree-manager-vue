@@ -53,8 +53,9 @@ export default {
           .set(
             {
               [typeofstock]: {
-                [newStockData.name]:
-                  (parseFloat(newStockData.weight) * 100) / 100
+                [newStockData.name]: parseFloat(
+                  parseFloat(newStockData.weight).toFixed(2)
+                )
               }
             },
             {

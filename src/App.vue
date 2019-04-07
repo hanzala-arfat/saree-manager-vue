@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar/>
     <div class="row">
-      <Sidebar v-if="loged"></Sidebar>
+      <Sidebar v-if="isAuthenticated"></Sidebar>
       <router-view class="views col-md-10"/>
     </div>
   </div>
@@ -12,22 +12,15 @@
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import firebase from "firebase";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Navbar,
     Sidebar
   },
-  data() {
-    return {
-      loged: false
-    };
-  },
-  beforeMount() {
-    let self = this;
-    firebase.auth().onAuthStateChanged(function() {
-      self.loged = window.localStorage.getItem("userID");
-    });
+  computed: {
+    ...mapGetters(["isAuthenticated"])
   }
 };
 </script>

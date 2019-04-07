@@ -48,7 +48,7 @@
                 v-model="newCone.name"
               >
               <input
-                type="text"
+                type="number"
                 class="form-control"
                 placeholder="Enter Weight."
                 v-model="newCone.weight"
@@ -74,67 +74,41 @@
 
 
 <script>
-import firebase from "firebase";
+import { mapGetters } from "vuex";
 export default {
   name: "ItemCone",
   data() {
     return {
-      coneList: [],
-      newCone: { name: "", weight: "" },
-      userID: window.localStorage.getItem("userID") // storage (browser) se user id milti h 
+      newCone: { name: "", weight: 0 }
     };
   },
-  async mounted() {
-    let self = this;
-    if (this.userID) {
-      let db = firebase.firestore(); // data base leke list show karna
-      db.collection("users")
-        .doc(this.userID)
-        .get()
-        .then(function(doc) {
-          if (doc.exists) {
-            let data1 = doc.data().stock.cone;
-            for (var key in data1) {
-              //console.log(key + data1[key]);
-              var element = {};
-              element = { name: key, weight: data1[key] }; //element objeect me leke fir coneList push
-              self.coneList.push(element); // kar ke show kiya
-            }
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-    } else {
-      console.log("user undefined");
+  computed: {
+    ...mapGetters(["userID", "coneList"])
+  },
+  beforeMount() {
+    if (!this.coneList.length) {
+      this.$store.dispatch("getTotalStockData");
     }
   },
-
   methods: {
     addNewCone() {
-      self = this;
-      let db = firebase.firestore();
-      db.collection("users")
-        .doc(this.userID)
-        .set(
-          {
-            stock: {
-              cone: {
-                [this.newCone.name]: this.newCone.weight
-              }
-            }
-          },
-          { merge: true }
-        )
-        .then(function() {
-          console.log("Document successfully written!");
-          self.coneList.push(self.newCone);
-          self.newCone = { name: "", weight: "" };
+      this.coneList.forEach(cone => {
+        if (cone.name === this.newCone.name) {
+          this.newCone.weight =
+            parseFloat(this.newCone.weight) + parseFloat(cone.weight);
+        }
+      });
+
+      this.$store
+        .dispatch("setSpecificStockData", {
+          typeofstock: "Cone",
+          newStockData: this.newCone
         })
-        .catch(function(error) {
+        .then(() => {
+          console.log("Document successfully written.");
+          this.newCone = { name: "", weight: 0 };
+        })
+        .catch(error => {
           console.error("Error writing document: ", error);
         });
     }

@@ -6,8 +6,8 @@
       </div>-->
       <div class="profile mt-5">
         <img src="@/assets/profile.png" class="rounded mb-3" alt="Cinque Terre">
-        <div v-if="myName">
-          <p class="h2">{{myName}}</p>
+        <div v-if="username">
+          <p class="h2">{{username}}</p>
           <button
             class="btn btn-lg btn-primary btn-block mt-1"
             type="submit"
@@ -38,74 +38,32 @@
 </template>
 
 <script>
-import firebase from "firebase"; // new syntax
-// let firebase = require('firebase')  // old syntax
+import firebase from "firebase";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Profile",
   data() {
-    return {
-      myName: "",
-      userID: window.localStorage.getItem("userID")
-    };
+    return {};
   },
-  async mounted() {
-    // data lena db se
-    let self = this; // this self var me bas rakha gaya h
-    if (this.userID) {
-      let db = firebase.firestore();
-      db.collection("users")
-        .doc(this.userID)
-        .get()
-        .then(function(doc) {
-          if (doc.exists) {
-            self.myName = doc.data().profile.name; // myName par db se user name inislize hua h
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-    } else {
-      console.log("user undefined");
+  computed: {
+    ...mapGetters(["isAuthenticated", "username"])
+  },
+  mounted() {
+    if (this.isAuthenticated && !this.username) {
+      this.$store.dispatch("getUserName");
     }
   },
   methods: {
-    save() {
-      // data push
-      this.myName = document.getElementById("name").value; // name ki value
-      let db = firebase.firestore(); // yahan se data push hota hai
-      db.collection("users")
-        .doc(this.userID)
-        .set({
-          profile: {
-            name: this.myName
-          }
-        })
-        .then(function() {
-          console.log("Document successfully written!");
-        })
-        .catch(function(error) {
-          console.error("Error writing document: ", error);
-        });
+    saveUsername() {
+      if (document.getElementById("name").value) {
+        this.username = document.getElementById("name").value;
+        this.$store.dispatch("setUserName", { enteredName: this.username });
+      } else {
+        console.log("Enter Valid Name");
+      }
     },
-    logout() {
-      let self = this;
-      firebase
-        .auth()
-        .signOut()
-        .then(
-          function() {
-            console.log("Signed Out");
-            window.localStorage.removeItem("userID");
-            self.$router.push("/login");
-          },
-          function(error) {
-            console.error("Sign Out Error", error);
-          }
-        );
-    }
+    ...mapActions(["logout"])
   }
 };
 </script>

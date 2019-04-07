@@ -5,16 +5,16 @@ import Customer from "./views/Customer.vue";
 import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
 import AddCustomer from "./views/AddCustomer.vue";
-import viewCustName from "./views/viewCustName.vue";
+import CustomerInfo from "./views/CustomerInfo.vue";
 import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
 import Login from "./views/Login.vue";
+import store from "./store/store";
 Vue.use(Router);
 
 let router = new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       redirect: "/dashboard"
     },
@@ -27,16 +27,15 @@ let router = new Router({
       path: "/customer",
       name: "Customer",
       component: Customer,
-      children: [
-        {
+      children: [{
           path: "/customer/new", // customer child
           name: "Customer",
           component: AddCustomer
         },
         {
-          path: "/customer/:name", // customer child
+          path: "/customer/:id", // customer child
           name: "Customer",
-          component: viewCustName
+          component: CustomerInfo
         }
       ]
     },
@@ -73,19 +72,20 @@ let router = new Router({
   ]
 });
 
-router.beforeEach(async (to, from, next) => {
-  let loggedUser = window.localStorage.getItem("userID");
-  if (!loggedUser && to.name != "Login") {
-    return next({
-      path: "/login"
-    });
-  }
-  if (loggedUser && to.name === "Login") {
-    return next({
-      path: "/dashboard"
-    });
-  }
-  next();
+router.beforeEach((to, from, next) => {
+  store.watch((_, getters) => {
+    if (!getters.isAuthenticated && to.name != "Login") {
+      return next({
+        path: "/login"
+      });
+    }
+    if (getters.isAuthenticated && to.name === "Login") {
+      return next({
+        path: "/dashboard"
+      });
+    }
+    next();
+  });
 });
 
 export default router;

@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="container">
-      <div class="login" v-if="!bol">
+      <div class="login" v-if="!otpSent">
         <form class="form-signin">
           <h3 class="h3 mb-3 font-weight-normal align-center">Sign In</h3>
           <label for="inputEmail" class="sr-only">Phone Number</label>
@@ -18,7 +18,7 @@
           <button
             id="sign-in-button"
             class="btn btn-lg btn-primary btn-block mt-3"
-            @click.prevent="sendOtp"
+            @click.prevent="checkValidNumber"
           >Proceed</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
         </form>
@@ -39,8 +39,8 @@
           >
           <button
             class="btn btn-lg btn-primary btn-block mt-3"
-            :class="{ 'disabled':disable }"
-            @click.prevent="enterOtp"
+            :class="{ 'disable':disableDoneBtn }"
+            @click.prevent="verifyOtp"
           >Done</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
         </form>
@@ -52,88 +52,39 @@
 
 <script>
 import firebase from "firebase";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Login",
   data() {
     return {
-      bol: false,
+      otpSent: false,
       phone: "",
       otp: "",
-      disable: false
+      disableDoneBtn: false
     };
   },
   mounted() {
-    firebase.auth().useDeviceLanguage();
-    let self = this;
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: function(response) {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          // ...
-          console.log("recaptcha Successful");
-        },
-        "expired-callback": function() {
-          // Response expired. Ask user to solve reCAPTCHA again.
-          // ...
-        }
-      }
-    );
-    window.recaptchaVerifier.render().then(function(widgetId) {
-      window.recaptchaWidgetId = widgetId;
-    });
+    this.$store.dispatch("initializeReCaptcha");
   },
   methods: {
-    sendOtp() {
-      this.bol = true;
-      let self = this;
-      var phoneNumber = this.phone;
-      var appVerifier = window.recaptchaVerifier;
-      if (phoneNumber.toString().length >= 10) {
-        phoneNumber.toString().length === 10
-          ? (phoneNumber = "+91" + phoneNumber.toString())
-          : (phoneNumber = phoneNumber.toString());
-        firebase
-          .auth()
-          .signInWithPhoneNumber(phoneNumber, appVerifier)
-          .then(function(confirmationResult) {
-            // SMS sent. Prompt user to type the code from the message, then sign the
-            // user in with confirmationResult.confirm(code).
-            window.confirmationResult = confirmationResult;
-          })
-          .catch(function(error) {
-            // Error; SMS not sent
-            // ...
-            console.log("OTP sending failed: " + error);
-            window.recaptchaVerifier.render().then(function(widgetId) {
-              grecaptcha.reset(widgetId);
-            });
-          });
+    checkValidNumber() {
+      if (this.phone.toString().length >= 10) {
+        this.phone.toString().length === 10
+          ? (this.phone = "+91" + this.phone.toString())
+          : (this.phone = this.phone.toString());
+        this.otpSent = true;
+        this.$store.dispatch("sendOtp", { phoneNumber: this.phone });
       } else {
         console.log("Number not valid");
       }
     },
-    enterOtp() {
-      this.disable = true;
-      let self = this;
-      let enteredOtp = this.otp;
-      if (enteredOtp.toString().length === 6) {
-        window.confirmationResult
-          .confirm(enteredOtp)
-          .then(function(result) {
-            // User signed in successfully.
-            window.localStorage.setItem("userID", result.user.uid);
-            self.$router.push("/profile");
-            // ...
-          })
-          .catch(function(error) {
-            // User couldn't sign in (bad verification code?)
-            // ...
-            console.log("Wrong Verfication Code");
-            self.disable = false;
-          });
+    verifyOtp() {
+      this.disableDoneBtn = true;
+      if (this.otp.toString().length === 6) {
+        this.$store.dispatch("verifyOtp", { otp: this.otp });
+      } else {
+        console.log("Enter 6 digit number.");
       }
     }
   }

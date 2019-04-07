@@ -50,7 +50,7 @@
                 required
               >
               <input
-                type="text"
+                type="number"
                 class="form-control"
                 placeholder="Enter Weight."
                 v-model="newZari.weight"
@@ -72,81 +72,47 @@
   </div>
 </template>
 
-
-
 <script>
 import firebase from "firebase";
+import { mapGetters } from "vuex";
+
 export default {
   name: "ItemZari",
   data() {
     return {
-      userID: window.localStorage.getItem("userID"),
-      zariList: [],
-      newZari: { name: "", weight: "" } //puh
+      newZari: { name: "", weight: 0 }
     };
   },
-  async mounted() {
-    let self = this; // this self var me bas rakha gaya h
-    if (this.userID) {   
-      let db = firebase.firestore(); // data base leke list show karna
-      db.collection("users")
-        .doc(this.userID)
-        .get()
-        .then(function(doc) {
-          if (doc.exists) {
-            // self.name = doc.data().profile.name;
-            let data1 = doc.data().stock.zari;
-            for (var key in data1) {
-              //console.log(key + data1[key]);
-
-              var element = {};
-              element = { name: key, weight: data1[key] };
-              self.zariList.push(element);
-            }
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-    } else {
-      console.log("user undefined");
+  computed: {
+    ...mapGetters(["userID", "zariList"])
+  },
+  beforeMount() {
+    if (!this.zariList.length) {
+      this.$store.dispatch("getTotalStockData");
     }
   },
   methods: {
     addNewZari() {
-      // data push
-      let self = this;
-      let db = firebase.firestore(); // yahan se data push hota hai
-      db.collection("users")
-        .doc(this.userID)
-        .set(
-          {
-            stock: {
-              zari: {
-                [this.newZari.name]: this.newZari.weight
-              }
-            }
-          },
-          { merge: true } // overwrite nhi hoga
-        )
-        .then(function() {
-          console.log("Document successfully written!");
-          self.zariList.push({
-            name: self.newZari.name,
-            weight: self.newZari.weight
-          });
-          self.newZari = { name: "", weight: "" };
+      this.zariList.forEach(zari => {
+        if (zari.name === this.newZari.name) {
+          this.newZari.weight =
+            parseFloat(this.newZari.weight) + parseFloat(zari.weight);
+        }
+      });
+
+      this.$store
+        .dispatch("setSpecificStockData", {
+          typeofstock: "Zari",
+          newStockData: this.newZari
         })
-        .catch(function(error) {
+        .then(() => {
+          console.log("Document successfully written.");
+          this.newZari = { name: "", weight: 0 };
+        })
+        .catch(error => {
           console.error("Error writing document: ", error);
         });
     }
-
-    // this.zariList.push(this.newZari);
-    // this.newZari = { name: '', weight: ''}
   }
 };
 </script>

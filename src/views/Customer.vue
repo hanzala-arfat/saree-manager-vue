@@ -1,67 +1,57 @@
 <template>
   <div class="customer-page">
-    <div v-if="!childActive">
+    <div v-if="$route.path === '/customer'">
       <div class="container">
         <div class="title-bar">
           <h2>Customers</h2>
           <p>Yahan new customer add karen.</p>
           <router-link to="/customer/new">
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              @click="childActive = true"
-            >+ Add Customer</button>
+            <button type="button" class="btn btn-primary btn-sm">+ Add Customer</button>
           </router-link>
         </div>
       </div>
       <div class="container">
-        <ul class="list-group">
+        <ul class="list-group" v-if="customerList">
           <li
             class="list-group-item"
-            v-for="(user, index) in userList"
+            v-for="(customer, index) in Object.keys(customerList)"
             :key="index"
-            @click="listclick"
+            @click="customerInfoSelected(customerList[customer])"
           >
-            <!-- niche copy -->
-            <router-link :to="'/customer/' + user.name.toLowerCase()">
-              <p style="font-weight:650">
-                {{ user.name }}
-                <span style="float:right; font-weight:350">{{ user.tani }}</span>
-              </p>
-            </router-link>
+            <p style="font-weight:650">
+              {{ customerList[customer].name }}
+              <span
+                style="float:right; font-weight:350"
+              >{{ customerList[customer].tani }}</span>
+            </p>
           </li>
         </ul>
       </div>
     </div>
     <router-view v-else @submit="onNewCustSubmit"></router-view>
-    <!-- listen for submit event -->
   </div>
 </template>
 
-
-
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "Customer",
   data() {
     return {
-      userList: [
-        { name: "Sultan", tani: 10 },
-        { name: "Furqan", tani: 14 },
-        { name: "Shamshad", tani: 17 },
-        { name: "Amir", tani: 18 },
-        { name: "Hashim", tani: 20 }
-      ],
       childActive: false
     };
   },
+  computed: {
+    ...mapGetters(["customerList"])
+  },
   methods: {
     onNewCustSubmit(custData) {
-      this.childActive = false;
-      if (custData) this.userList.push(custData);
+      if (custData) this.customerList.push(custData);
     },
-    listclick() {
+    customerInfoSelected(customer) {
       this.childActive = true;
+      this.$router.push({ path: `/customer/${customer.id}` });
     }
   }
 };
@@ -70,4 +60,7 @@ export default {
 
 
 <style scoped>
+li {
+  cursor: pointer;
+}
 </style>

@@ -61,10 +61,8 @@ export default {
       customer: {
         name: "",
         phone: "",
-        category: "",
-        tani: 0
-      },
-      userID: window.localStorage.getItem("userID")
+        category: ""
+      }
     };
   },
 
@@ -74,25 +72,15 @@ export default {
       this.$emit("submit"); //start event without argument
     },
     submitNewCustomer() {
-      let self = this;
-      let db = firebase.firestore();
-      db.collection("users")
-        .doc(this.userID)
-        .set(
-          {
-            workers: {
-              [self.customer.phone]: self.customer
-            }
-          },
-          { merge: true }
-        )
-        .then(function() {
+      this.$store
+        .dispatch("addNewCustomer", { newCustomer: this.customer })
+        .then(() => {
           console.log("Customer successfuly added");
-          self.$router.go(-1);
-          self.$emit("submit", self.customer); // start event and send data to Customer.vue
+          this.$router.go(-1);
+          this.$emit("submit");
         })
-        .catch(function(error) {
-          console.log("Customer adding error", error);
+        .catch(err => {
+          console.log("Customer adding error", err);
         });
     }
   }

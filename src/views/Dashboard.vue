@@ -13,6 +13,10 @@
 import firebase from "firebase";
 
 export default {
-  name: "Dashboard"
+  name: "Dashboard",
+  mounted() {
+    this.$store.dispatch("getCustomerList");
+    this.$store.dispatch("getTotalStockData");
+  }
 };
 </script>

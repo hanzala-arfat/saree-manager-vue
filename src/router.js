@@ -10,6 +10,7 @@ import ItemZari from "./views/ItemZari.vue";
 import ItemCone from "./views/ItemCone.vue";
 import ItemSaree from "./views/ItemSaree.vue";
 import Login from "./views/Login.vue";
+import WorkerDashboard from "./views/WorkerDashboard.vue";
 import store from "./store/store";
 Vue.use(Router);
 
@@ -70,12 +71,27 @@ let router = new Router({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/worker",
+      name: "WorkerDashboard",
+      component: WorkerDashboard
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   store.watch((_, getters) => {
+    if (
+      getters.isAuthenticated &&
+      getters.isWorker &&
+      (to.name != "WorkerDashboard" && to.name != "Profile")
+    ) {
+      console.log("Redirecting to worker page.");
+      return next({
+        path: "/worker"
+      });
+    }
     if (!getters.isAuthenticated && to.name != "Login") {
       return next({
         path: "/login"

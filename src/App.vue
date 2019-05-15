@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar/>
     <div class="row">
-      <Sidebar v-if="isAuthenticated"></Sidebar>
+      <Sidebar v-if="isAuthenticated && !isWorker"></Sidebar>
       <router-view class="views col-md-10"/>
     </div>
   </div>
@@ -20,7 +20,7 @@ export default {
     Sidebar
   },
   computed: {
-    ...mapGetters(["isAuthenticated"])
+    ...mapGetters(["isAuthenticated", "isWorker"])
   }
 };
 </script>

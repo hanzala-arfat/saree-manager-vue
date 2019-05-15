@@ -7,7 +7,7 @@ export default {
     userName: undefined,
     phoneNumber: undefined,
     isAuthenticated: false,
-    is_worker: undefined
+    is_worker: false
   },
   getters: {
     isAuthenticated(state) {
@@ -87,12 +87,12 @@ export default {
           router.replace("/login");
         });
     },
-    checkRole({ state, commit }) {
+    checkRole({ state, commit, dispatch }) {
       db.collection("Roles")
         .where("phone_number", "==", state.phoneNumber)
         .where("role", "==", "Worker")
         .get()
-        .then(snapshot => {
+        .then(async snapshot => {
           if (snapshot.empty) {
             if (state.userName) {
               router.replace("/dashboard");
@@ -102,7 +102,35 @@ export default {
             }
           } else {
             commit("setWorker", true);
-            router.replace("/profile");
+            await dispatch("getProfileInfo");
+            if (!state.userName) {
+              await dispatch("setWorkerUID");
+              await dispatch("getProfileInfo");
+            }
+          }
+        });
+    },
+    async setWorkerUID({ state }) {
+      db.collection("Users")
+        .where("phone_number", "==", state.phoneNumber)
+        .get()
+        .then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.docs[0].ref
+              .set(
+                {
+                  uid: state.userID
+                },
+                {
+                  merge: true
+                }
+              )
+              .then(function() {
+                console.log("User ID for Worker updated!!");
+              })
+              .catch(function(error) {
+                console.error("Error writing document: ", error);
+              });
           }
         });
     },
@@ -136,7 +164,7 @@ export default {
             .where("uid", "==", state.userID)
             .get()
             .then(snapshot => {
-              if (snapshot.docs[0].exists) {
+              if (!snapshot.empty) {
                 commit("setUserName", snapshot.docs[0].data().name);
                 commit("setPhoneNumber", snapshot.docs[0].data().phone_number);
                 commit("setWorker", snapshot.docs[0].data().is_worker);
@@ -159,8 +187,9 @@ export default {
         .then(() => {
           console.log("Signed Out");
           commit("setUserID", undefined);
+          commit("setUserName", undefined);
           commit("setAuth", false);
-          commit("setProfileInfo", undefined);
+          commit("setWorker", false);
           commit("setPhoneNumber", undefined);
           router.replace("/login");
         })

@@ -1,28 +1,12 @@
 <template>
-  <div class="navbar">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <i class="fab fa-sketch" style="font-size: 1.4rem"></i>
-      <span class="ml-2" style="font-size: 1.2rem">Saree Manager</span>
-    </a>
-    <!-- <ul class="navbar-links">
-      <li class="navbar-link">
-        <img src="./static/home.svg" width="20" height="20" class="d-inline-block align-top" alt="">
-        <router-link to="/">Home</router-link>
-      </li>
-      <li class="navbar-link">
-        <img src="./static/info.svg" width="20" height="20" class="d-inline-block align-top" alt="">
-        <router-link to="/about">About</router-link>
-      </li>
-      <li class="navbar-link">
-        <img src="./static/user.svg" width="20" height="20" class="d-inline-block align-top" alt="">
-        <span class="link-name">Profile</span>
-      </li>
-      <li class="navbar-link">
-        <img src="./static/settings.svg" width="20" height="20" class="d-inline-block align-top" alt="">
-        <span class="link-name">Settings</span>
-      </li>
-    </ul>-->
-  </div>
+  <v-toolbar dark>
+    <v-toolbar-title>Saree Manager</v-toolbar-title>
+  </v-toolbar>
+  <!-- <v-card flat>
+  <v-toolbar color="primary" dark extended flat>
+    <v-toolbar-title>Saree Manager</v-toolbar-title>
+  </v-toolbar>
+  </v-card>-->
 </template>
 
 
@@ -33,30 +17,4 @@ export default {
 </script>
 
 <style>
-.navbar {
-  z-index: 10;
-  background-color: #343a40 !important;
-  display: flex;
-  align-items: center;
-  color: white;
-  width: 100%;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: white;
-}
-
-.navbar-links {
-  list-style-type: none;
-  margin: 0;
-  padding-left: 0;
-  display: flex;
-  text-align: center;
-}
-
-.navbar-link {
-  display: inline;
-  margin: 1px 12px;
-}
 </style>

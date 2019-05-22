@@ -1,5 +1,5 @@
 <template>
-  <div class="addcustomer-page">
+  <!-- <div class="addcustomer-page">
     <div class="container">
       <div class="title-bar">
         <button
@@ -48,7 +48,42 @@
         <button type="submit" class="btn btn-primary" @click.prevent="submitNewCustomer">Submit</button>
       </form>
     </div>
-  </div>
+  </div>-->
+  <v-container>
+    <v-layout align-start justify-start row wrap class="mt-3">
+      <v-flex xs12>
+        <v-card elevation="0">
+          <v-card-title class="pa-1">
+            <v-btn flat icon class="ma-0" @click="goBack">
+              <v-icon>arrow_left</v-icon>
+            </v-btn>
+            <h4>Fill Customer Details</h4>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-divider class="ma-2"></v-divider>
+    <v-layout align-start justify-center row wrap class="mt-1">
+      <v-flex xs12>
+        <v-text-field
+          label="Enter Customer Name"
+          v-model="customer.name"
+          outline
+          required
+          autofocus
+        ></v-text-field>
+      </v-flex>
+      <v-flex xs12>
+        <v-text-field label="Enter Customer Phone No." v-model="customer.phone" outline required></v-text-field>
+      </v-flex>
+      <v-flex xs12>
+        <v-text-field label="Enter Customer Type" v-model="customer.category" outline required></v-text-field>
+      </v-flex>
+    </v-layout>
+    <v-layout align-end justify-end row>
+      <v-btn color="primary" @click.prevent="submitNewCustomer">Done</v-btn>
+    </v-layout>
+  </v-container>
 </template>
 
 
@@ -88,27 +123,4 @@ export default {
 </script>
 
 <style scoped>
-.title-bar {
-  padding: 12px 24px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-h4 {
-  margin: 0;
-  margin-left: 12px;
-  font-size: 1.4rem;
-}
-.btn {
-  padding: 2px 6px;
-}
-.form-container {
-  width: 60%;
-}
-@media (max-width: 768px) {
-  .form-container {
-    width: 100%;
-  }
-}
 </style>

@@ -1,70 +1,62 @@
 <template>
-  <div class="accordion" id="accordionExample" v-if="taniData">
-    <div class="card" v-for="(key, index) in Object.keys(taniData)" :key="index">
-      <div class="card-header" :id="index">
-        <h2 class="mb-0">
-          <button
-            class="btn font-weight-bold"
-            type="button"
-            data-toggle="collapse"
-            :data-target="'#no'+ index "
-            aria-expanded="true"
-            :aria-controls="'no' + index "
-          >Date {{taniData[key].date}}</button>
-        </h2>
-      </div>
+  <v-layout align-start justify-center row wrap v-if="taniData" class="mt-2">
+    <v-expansion-panel>
+      <v-expansion-panel-content v-for="(key, index) in Object.keys(taniData)" :key="index">
+        <template v-slot:header>
+          <div class="pl-2 font-weight-bold">Date {{taniData[key].date}}</div>
+        </template>
+        <v-card>
+          <v-card-text class="pa-0">
+            <v-list>
+              <v-list-tile v-if="taniData[key].cone">
+                <v-list-tile-content>
+                  <p
+                    class="mb-0"
+                    v-for="(typeofcone, i) in Object.keys(taniData[key].cone)"
+                    :key="i"
+                  >
+                    <v-icon>chevron_right</v-icon>
+                    &nbsp;
+                    {{typeofcone}} - Cone : {{taniData[key].cone[typeofcone]}} Kg
+                  </p>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile v-if="taniData[key].zari">
+                <v-list-tile-content>
+                  <p
+                    class="mb-0"
+                    v-for="(typeofzari, i) in Object.keys(taniData[key].zari)"
+                    :key="i"
+                  >
+                    <v-icon>chevron_right</v-icon>
+                    &nbsp;
+                    {{typeofzari}} - Zari : {{taniData[key].zari[typeofzari]}} Kg
+                  </p>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile v-if="taniData[key].saree">
+                <v-list-tile-content>
+                  <p class="mb-0">
+                    <v-icon>chevron_right</v-icon>
+                    &nbsp;Saree Details: {{taniData[key].saree}}
+                  </p>
+                </v-list-tile-content>
+              </v-list-tile>
 
-      <div
-        :id="'no'+ index"
-        class="collapse"
-        :aria-labelledby="index"
-        data-parent="#accordionExample"
-      >
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item detail" v-if="taniData[key].tani">
-              <i class="fas fa-chevron-right"></i>
-              &nbsp;Tani: {{taniData[key].tani}}
-            </li>
-
-            <li class="list-group-item" v-if="taniData[key].cone">
-              <p
-                class="detail mb-0"
-                v-for="(typeofcone, i) in Object.keys(taniData[key].cone)"
-                :key="i"
-              >
-                <i class="fas fa-chevron-right"></i>
-                &nbsp;
-                {{typeofcone}} - Cone : {{taniData[key].cone[typeofcone]}} Kg
-              </p>
-            </li>
-
-            <li class="list-group-item detail" v-if="taniData[key].saree">
-              <i class="fas fa-chevron-right"></i>
-              &nbsp;Saree Details: {{taniData[key].saree}}
-            </li>
-
-            <li class="list-group-item" v-if="taniData[key].zari">
-              <p
-                class="detail mb-0"
-                v-for="(typeofzari, i) in Object.keys(taniData[key].zari)"
-                :key="i"
-              >
-                <i class="fas fa-chevron-right"></i>
-                &nbsp;
-                {{typeofzari}} - Zari : {{taniData[key].zari[typeofzari]}} Kg
-              </p>
-            </li>
-
-            <li class="list-group-item detail" v-if="taniData[key].money">
-              <i class="fas fa-chevron-right"></i>
-              &nbsp;Money: {{taniData[key].money}}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+              <v-list-tile v-if="taniData[key].money">
+                <v-list-tile-content>
+                  <p class="mb-0">
+                    <v-icon>chevron_right</v-icon>
+                    &nbsp;Money: {{taniData[key].money}} Rs
+                  </p>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-layout>
 </template>
 
 <script>

@@ -1,12 +1,12 @@
 <template>
-  <div class="dashboard">
-    <div class="container">
-      <div class="title-bar">
-        <h2>Worker</h2>
+  <v-container>
+    <v-card elevation="0">
+      <v-container pa-3>
+        <h2>Dashboard</h2>
         <p>Ye under construction hai....Please wait...</p>
-      </div>
-    </div>
-  </div>
+      </v-container>
+    </v-card>
+  </v-container>
 </template>
 
 <script>

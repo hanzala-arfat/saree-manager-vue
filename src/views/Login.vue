@@ -1,53 +1,33 @@
 <template>
-  <div class="login-page">
-    <div class="container">
-      <div class="login" v-if="!otpSent">
-        <form class="form-signin">
-          <h3 class="h3 mb-3 font-weight-normal align-center">Sign In</h3>
-          <label for="inputEmail" class="sr-only">Phone Number</label>
-          <input
-            type="number"
-            id="inputEmail"
-            class="form-control"
-            placeholder="Phone number"
-            :maxlength="13"
+  <v-container grid-list-xs>
+    <v-layout align-start justify-center row fill-height wrap>
+      <v-flex xs10 mt-5 v-if="!otpSent">
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <h3 class="text-xs-center">Sign In</h3>
+          <v-text-field
             v-model="phone"
+            :counter="10"
+            :rules="phoneRules"
+            label="Phone Number"
             required
-            autofocus
-          >
-          <button
-            id="sign-in-button"
-            class="btn btn-lg btn-primary btn-block mt-3"
-            @click.prevent="checkValidNumber"
-          >Proceed</button>
-          <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
-        </form>
-      </div>
-
-      <div v-else>
-        <form class="form-otp">
-          <h3 class="h3 mb-3 font-weight-normal align-center">OTP page</h3>
-          <label for="otp" class="sr-only">OTP Number</label>
-          <input
-            type="number"
-            id="otp"
-            class="form-control"
-            placeholder="OTP number"
-            v-model="otp"
-            required
-            autofocus
-          >
-          <button
-            class="btn btn-lg btn-primary btn-block mt-3"
-            :class="{ 'disable':disableDoneBtn }"
-            @click.prevent="verifyOtp"
-          >Done</button>
-          <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
-        </form>
-      </div>
+          ></v-text-field>
+          <div class="text-xs-center">
+            <v-btn :disabled="!valid" color="primary" @click.prevent="checkValidNumber">Proceed</v-btn>
+          </div>
+        </v-form>
+      </v-flex>
+      <v-flex xs10 mt-5 v-else>
+        <v-form ref="form2" v-model="valid" lazy-validation>
+          <h3 class="text-xs-center">Verify OTP</h3>
+          <v-text-field v-model="otp" :counter="6" :rules="otpRules" label="Enter OTP" required></v-text-field>
+          <div class="text-xs-center">
+            <v-btn :disabled="disableDoneBtn" color="primary" @click.prevent="verifyOtp">Done</v-btn>
+          </div>
+        </v-form>
+      </v-flex>
       <div id="recaptcha-container"></div>
-    </div>
-  </div>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -58,10 +38,20 @@ export default {
   name: "Login",
   data() {
     return {
+      valid: true,
       otpSent: false,
       phone: "",
       otp: "",
-      disableDoneBtn: false
+      disableDoneBtn: false,
+      phoneRules: [
+        v => !!v || "Phone Number is required",
+        v =>
+          (v && v.length === 10) || "Name must not be more than 10 characters"
+      ],
+      otpRules: [
+        v => !!v || "OTP is required",
+        v => (v && v.length === 6) || "Otp must not be more than 10 characters"
+      ]
     };
   },
   mounted() {
@@ -92,12 +82,5 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  width: 65%;
-}
-.h3 {
-  margin-top: 25%;
-  text-align: center;
-}
 </style>
 

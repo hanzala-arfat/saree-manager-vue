@@ -1,11 +1,15 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <Navbar/>
-    <div class="row">
-      <Sidebar v-if="isAuthenticated && !isWorker"></Sidebar>
-      <router-view class="views col-md-10"/>
-    </div>
-  </div>
+    <v-container pt-0 pr-0 pl-0 pb-5 grid-list-xs>
+      <v-layout align-start justify-center row fill-height wrap>
+        <v-flex>
+          <Sidebar v-if="isAuthenticated && !isWorker"></Sidebar>
+          <router-view/>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -32,25 +36,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.row {
-  margin: 0;
+  max-height: 100vh;
 }
 
 @media (max-width: 768px) {
-  .navbar {
-    position: fixed;
-    top: 0;
-  }
-  .views {
-    margin: 8vh auto;
-  }
 }
 </style>

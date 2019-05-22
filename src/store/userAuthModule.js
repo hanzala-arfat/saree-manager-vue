@@ -98,7 +98,7 @@ export default {
               router.replace("/dashboard");
             } else {
               commit("setWorker", false);
-              router.replace("/profile");
+              router.replace("/dashboard");
             }
           } else {
             commit("setWorker", true);

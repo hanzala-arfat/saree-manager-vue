@@ -1,28 +1,36 @@
 <template>
-  <div class="item-page">
-    <div class="container">
-      <div class="title-bar">
-        <h2>Materials</h2>
-        <p>Yahan materials k stock ko manage karen.</p>
-        <!-- <button type="button" class="btn btn-primary btn-sm">+ New Item</button> -->
-      </div>
-    </div>
-    <div class="container cards">
-      <div class="card-deck">
-        <div class="card" v-for="(item, index) in itemList" :key="index">
-          <div class="card-body">
-            <h5 class="card-title">{{item.name}}</h5>
-            <p class="card-text">{{item.description}}</p>
-          </div>
-          <div class="card-footer bg-transparent">
-            <router-link :to="'/item/' + item.name.toLowerCase()" class="btn btn-dark btn-sm">
-              <i class="fas fa-arrow-right"></i>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-container grid-list-xs>
+    <v-layout align-start justify-center wrap row>
+      <v-flex xs12>
+        <v-card elevation="0">
+          <v-container pa-3>
+            <h2>Materials</h2>
+            <p>Yahan materials k stock ko manage karen.</p>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout align-start justify-center wrap row>
+      <v-flex mt-2>
+        <v-container mt-2 pa-0 v-for="(item, index) in itemList" :key="index">
+          <v-card elevation="1">
+            <v-card-title primary-title>
+              <div>
+                <div class="headline">{{item.name}}</div>
+                <span class="grey--text">{{item.description}}</span>
+              </div>
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <router-link :to="'/item/' + item.name.toLowerCase()">
+                <v-btn flat color="primary">Manage</v-btn>
+              </router-link>
+            </v-card-actions>
+          </v-card>
+        </v-container>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -50,23 +58,5 @@ export default {
 </script>
 
 <style>
-.title-bar {
-  background: #e9ecef;
-  margin: 16px 0px;
-  padding: 36px;
-  border-radius: 0.25rem;
-}
-.card {
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-}
-.card-footer {
-  border: none;
-}
-.card-body > p {
-  margin-bottom: 0.2rem;
-}
-.card-footer {
-  padding-top: 0.1rem;
-}
 </style>
 

@@ -1,117 +1,80 @@
 <template>
-  <div class="container">
-    <div class="title-bar">
-      <h2>{{ customerData.name }}</h2>
-      <p>Customer Details for Tani</p>
-      <button
-        type="button"
-        class="btn btn-primary btn-sm"
-        data-toggle="modal"
-        data-target="#addNewDataModal"
-      >
-        <i class="fas fa-scroll"></i> Add Details
-      </button>
-    </div>
+  <v-container>
+    <v-layout align-start justify-center row wrap>
+      <v-flex xs12>
+        <v-card elevation="0">
+          <v-container pt-3 pr-3 pl-3 pb-0>
+            <h2>{{ customerData.name }}</h2>
+            <p>Customer Details for Tani</p>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" @click.stop="dialog=true">Add Details</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
     <TaniDataList :taniData="currentTaniData"/>
-    <div class="modal fade" id="addNewDataModal" tabindex="1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <div class="input-group flex-nowrap">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter weight of cone"
-                aria-label="Enter weight of cone"
-                aria-describedby="addon-wrapping"
-                v-model="newData.cone.weight"
-              >
-              <div class="input-group-append">
-                <select v-model="newData.cone.type" class="btn btn-dark">
-                  <option selected>Cone</option>
-                  <option
-                    v-for="(select, index) in Object.keys(coneTypes)"
-                    :key="index"
-                    :value="select"
-                  >{{select}}</option>
-                </select>
-              </div>
-            </div>
-            <small
-              class="form-text text-muted mb-3"
-            >Enter weight between 0Kg and {{coneTypes[newData.cone.type] || 0}}Kg</small>
-
-            <div class="input-group flex-nowrap">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter weight of zari"
-                aria-label="Enter weight of zari"
-                aria-describedby="addon-wrapping"
-                v-model="newData.zari.weight"
-              >
-              <div class="input-group-append">
-                <select v-model="newData.zari.type" class="btn btn-dark">
-                  <option selected>Zari</option>
-                  <option
-                    v-for="(select, index) in Object.keys(zariTypes)"
-                    :key="index"
-                    :value="select"
-                  >{{select}}</option>
-                </select>
-              </div>
-            </div>
-            <small
-              class="form-text text-muted mb-3"
-            >Enter weight between 0Kg and {{zariTypes[newData.zari.type] || 0}}Kg</small>
-
-            <div class="input-group flex-nowrap mb-3">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter weight of saree"
-                aria-label="Enter weight of saree"
-                aria-describedby="addon-wrapping"
-                v-model="newData.saree"
-              >
-              <div class="input-group-append">
-                <div class="btn btn-dark">Saree</div>
-              </div>
-            </div>
-
-            <div class="input-group flex-nowrap mb-3">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter Amount"
-                aria-label="Enter Amount"
-                aria-describedby="addon-wrapping"
-                v-model="newData.money"
-              >
-              <div class="input-group-append">
-                <div class="btn btn-dark">Money</div>
-              </div>
-            </div>
-
-            <input
-              class="btn btn-primary"
-              type="submit"
-              @click="addNewData"
-              data-dismiss="modal"
-              value="Submit"
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <v-dialog v-model="dialog" max-width="420">
+      <v-card>
+        <v-card-title>
+          <h4>Add Details</h4>
+        </v-card-title>
+        <v-card-text>
+          <v-container pa-0 ma-0 grid-list-xs>
+            <v-layout align-start justify-center row wrap>
+              <v-flex xs6>
+                <v-text-field
+                  label="Enter weight of zari."
+                  v-model="newData.zari.weight"
+                  outline
+                  required
+                  autofocus
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs6>
+                <v-combobox
+                  outline
+                  v-model="newData.zari.type"
+                  :items="Object.keys(zariTypes)"
+                  label="Select type of zari"
+                  required
+                ></v-combobox>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  label="Enter weight of cone."
+                  v-model="newData.cone.weight"
+                  outline
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs6>
+                <v-combobox
+                  outline
+                  v-model="newData.cone.type"
+                  :items="Object.keys(coneTypes)"
+                  label="Select type of cone"
+                  required
+                ></v-combobox>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="Enter amount." v-model="newData.money" outline required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="Enter saree count." v-model="newData.saree" outline required></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat="flat" @click="dialog = false">Close</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="addNewData">Done</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -125,6 +88,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       newData: {
         saree: 0,
         cone: { type: "Cone", weight: 0 },
@@ -158,6 +122,7 @@ export default {
   methods: {
     addNewData() {
       if (this.validateForm()) {
+        this.dialog = false;
         this.newData.date = this.date.today;
 
         try {
@@ -281,18 +246,4 @@ export default {
 </script>
 
 <style scoped>
-.btn-dark {
-  border-top-right-radius: 0.25rem !important;
-  border-bottom-right-radius: 0.25rem !important;
-}
-.form-control {
-  border-radius: 0.25rem !important;
-}
-.input-group-append {
-  width: 80px !important;
-}
-.input-group-append > .btn {
-  width: 100%;
-  text-align: left;
-}
 </style>
